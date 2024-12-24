@@ -68,7 +68,7 @@ async def main():
         start_time += timedelta(minutes=1)
     
     # 撮影時間（3時間）
-    duration = timedelta(hours=3)
+    duration = timedelta(minutes=3)
 
     driver = setup_driver()
   

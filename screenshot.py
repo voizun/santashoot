@@ -26,7 +26,7 @@ url = "https://santatracker.google.com/"
 
 # スクリーンショット撮影カウンター
 screenshot_count = 0
-max_screenshots = 10  # 最大360枚撮影
+max_screenshots = 360  # 最大360枚撮影
 
 
 def capture_screenshot(signum, frame):

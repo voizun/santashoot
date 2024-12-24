@@ -65,7 +65,7 @@ def take_screenshot():
     screenshot_counter += 1
 
 # 10秒間隔で360枚のスクリーンショットを撮影
-time_span(10, 10, take_screenshot)
+time_span(10, 348, take_screenshot)
 
 # ドライバーを終了
 driver.quit()

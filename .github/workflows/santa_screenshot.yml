@@ -2,7 +2,7 @@ name: Screenshot to Video
 
 on:
   schedule:
-    - cron: "50 * * * *"  # 毎時50分に実行
+    - cron: "25 * * * *"  # 毎時50分に実行
   workflow_dispatch:  # 手動実行も可能
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: リポジトリをチェックアウト
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 必要なツールをインストール
         run: |

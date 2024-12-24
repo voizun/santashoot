@@ -62,7 +62,7 @@ print("Page loaded successfully.")
 now = datetime.now()
 seconds_to_wait = (60 - now.minute) * 60 - now.second
 print(f"Waiting {seconds_to_wait} seconds until 00:00...")
-#time.sleep(seconds_to_wait)
+time.sleep(seconds_to_wait)
 
 # スクリーンショット撮影のコールバック関数
 screenshot_counter = 0  # 撮影した枚数をカウントする

@@ -3,6 +3,8 @@ import time
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import requests
+import json
 
 def time_span(interval, iterations, callback):
     """
@@ -12,13 +14,20 @@ def time_span(interval, iterations, callback):
     base_time = time.perf_counter()
 
     for _ in range(iterations):
+        # コールバック関数を実行
+        callback()
+        if interations - 75 == _:
+            headers = {"Accept":"application/vnd.github+json", "Authorization":"Bearer "+os.getenv('GITHUB_TOKEN')}
+            data = json.dumps({"ref": "main"})
+            response = requests.post("https://api.github.com/repos/voizun/santashoot/actions/workflows/santa_screenshot.yml/dispatches", headers=headers, data=data)
+            if response.status_code == 200:
+                print("[200 OK]", response.text)
+            else:
+                print("[ERROR]", response.status_code)
         now = time.perf_counter()
         elapsed_time = now - base_time
         remainder = elapsed_time % interval
-
-        # コールバック関数を実行
-        callback()
-
+            
         # 次の間隔まで待機
         time.sleep(interval - remainder)
 

@@ -20,7 +20,6 @@ jobs:
           pip3 install selenium
           wget https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
           tar xf ffmpeg-*
-          ls -al ffmpeg-*
 
       - name: スクリーンショットを撮影
         run: |
@@ -28,7 +27,7 @@ jobs:
 
       - name: 動画を生成
         run: |
-          ffmpeg -framerate 60 -i screenshots/santa_%04d.png -c:v libsvtav1 -preset 6 -crf 35 output.mp4
+          ./ffmpeg-master-latest-linux64-gpl/bin/ffmpeg -framerate 60 -i screenshots/santa_%04d.png -c:v libsvtav1 -preset 6 -crf 35 output.mp4
 
       - name: リリースを作成して動画をアップロード
         env:

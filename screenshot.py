@@ -1,11 +1,28 @@
 import os
-import signal
 import time
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+
+def time_span(interval, iterations, callback):
+    """
+    指定した間隔(interval)で指定回数(iterations)処理を実行する。
+    callback: 実行する関数。
+    """
+    base_time = time.perf_counter()
+
+    for _ in range(iterations):
+        now = time.perf_counter()
+        elapsed_time = now - base_time
+        remainder = elapsed_time % interval
+
+        # コールバック関数を実行
+        callback()
+
+        # 次の間隔まで待機
+        time.sleep(interval - remainder)
 
 # スクリーンショット保存先フォルダ
 output_dir = "screenshots"
@@ -25,48 +42,28 @@ driver = webdriver.Chrome(options=options)
 
 # GoogleサンタページのURL
 url = "https://santatracker.google.com/"
+driver.get(url)  # ページを一度だけロード
+print("Waiting for completely loading the page...")
+WebDriverWait(driver, 30).until(expected_conditions.presence_of_all_elements_located)
+print("Page loaded successfully.")
 
-# スクリーンショット撮影カウンター
-screenshot_count = 0
-max_screenshots = 360  # 最大360枚撮影
+# 00分まで待機
+now = datetime.now()
+seconds_to_wait = (60 - now.minute) * 60 - now.second
+print(f"Waiting {seconds_to_wait} seconds until 00:00...")
+time.sleep(seconds_to_wait)
 
-
-def capture_screenshot(signum, frame):
-    global screenshot_count
-
-    # 撮影が完了した場合、ドライバーを終了して終了
-    if screenshot_count >= max_screenshots:
-        print("Screenshot capture complete.")
-        driver.quit()
-        exit(0)
-
-    # スクリーンショットを保存
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = os.path.join(output_dir, f"santa_{screenshot_count:04d}.png")
+# スクリーンショット撮影のコールバック関数
+screenshot_counter = 0  # 撮影した枚数をカウントする
+def take_screenshot():
+    global screenshot_counter
+    filename = os.path.join(output_dir, f"santa_{screenshot_counter:04d}.png")
     driver.save_screenshot(filename)
     print(f"Screenshot saved: {filename}")
+    screenshot_counter += 1
 
-    # カウンターを増加
-    screenshot_count += 1
+# 10秒間隔で360枚のスクリーンショットを撮影
+time_span(10, 360, take_screenshot)
 
-
-if __name__ == "__main__":
-    # 最初にURLを1回開く
-    driver.get(url)
-    print("Waiting for completely loading the page...")
-    WebDriverWait(driver, 30).until(expected_conditions.presence_of_all_elements_located)
-    print("Page loaded successfully.")
-    
-    # 00分まで待機
-    now = datetime.now()
-    seconds_to_wait = (60 - now.minute) * 60 - now.second
-    print(f"Waiting {seconds_to_wait} seconds until 00:00...")
-    time.sleep(seconds_to_wait)
-
-    # タイマー設定: 初回遅延なし、10秒間隔で実行
-    signal.signal(signal.SIGALRM, capture_screenshot)
-    signal.setitimer(signal.ITIMER_REAL, 0, 10)  # 10秒間隔で実行
-
-    # メインスレッドを待機させる
-    while True:
-        time.sleep(60)
+# ドライバーを終了
+driver.quit()

@@ -7,6 +7,7 @@ jobs:
   capture_and_video:
     permissions:
       contents: write
+      actions: write
     runs-on: ubuntu-latest
 
     steps:
@@ -22,6 +23,8 @@ jobs:
           tar xf ffmpeg-*
 
       - name: スクリーンショットを撮影
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python screenshot.py
 

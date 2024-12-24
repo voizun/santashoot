@@ -15,6 +15,15 @@ def setup_driver():
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
+   # タイムゾーンを東京に設定
+    options.add_experimental_option("prefs", {
+        "intl.accept_languages": "ja",  # 言語を日本語に設定
+    })
+    options.add_argument("--lang=ja")
+    options.add_argument("--disable-dev-shm-usage")  # デバッグ環境でのリソース問題を軽減
+
+    # タイムゾーンを東京にするための追加設定
+    options.add_argument("--blink-settings=timezone=Asia/Tokyo")
     return webdriver.Chrome(options=options)
 
 async def take_screenshot(driver, output_dir, count):
@@ -25,7 +34,10 @@ async def take_screenshot(driver, output_dir, count):
     driver.save_screenshot(filename)
     print(f"Saved screenshot {filename}")
 
-def create_video(output_dir, video_name="output.av1"):
+def create_video(output_dir):
+    # 現在の日時を動画ファイル名に追加
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    video_name = f"output_{timestamp}.av1"
     """スクリーンショットをAV1動画に変換する"""
     command = [
         "ffmpeg", "-y", "-framerate", "30", "-i",

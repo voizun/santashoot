@@ -16,7 +16,7 @@ def time_span(interval, iterations, callback):
     for _ in range(iterations):
         # コールバック関数を実行
         callback()
-        if interations - 180 == _:
+        if iterations - 180 == _:
             headers = {"Accept":"application/vnd.github+json", "Authorization":"Bearer "+os.getenv('GITHUB_TOKEN')}
             data = json.dumps({"ref": "main"})
             response = requests.post("https://api.github.com/repos/voizun/santashoot/actions/workflows/santa_screenshot.yml/dispatches", headers=headers, data=data)
@@ -62,7 +62,7 @@ print("Page loaded successfully.")
 now = datetime.now()
 seconds_to_wait = (60 - now.minute) * 60 - now.second
 print(f"Waiting {seconds_to_wait} seconds until 00:00...")
-time.sleep(seconds_to_wait)
+#time.sleep(seconds_to_wait)
 
 # スクリーンショット撮影のコールバック関数
 screenshot_counter = 0  # 撮影した枚数をカウントする
@@ -74,7 +74,7 @@ def take_screenshot():
     screenshot_counter += 1
 
 # 10秒間隔で360枚のスクリーンショットを撮影
-time_span(5, 720, take_screenshot)
+time_span(5, 660, take_screenshot)
 
 # ドライバーを終了
 driver.quit()

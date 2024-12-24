@@ -32,7 +32,7 @@ options.add_argument("--headless")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--lang=ja-JP")
-options.add_argument("--window-size=1920,1278
+options.add_argument("--window-size=1920,1278")
 options.add_argument("TZ=Asia/Tokyo")
 options.add_experimental_option("prefs", {
         "intl.accept_languages": "ja",  # 言語を日本語に設定
@@ -53,7 +53,7 @@ print("Page loaded successfully.")
 now = datetime.now()
 seconds_to_wait = (60 - now.minute) * 60 - now.second
 print(f"Waiting {seconds_to_wait} seconds until 00:00...")
-#time.sleep(seconds_to_wait)
+time.sleep(seconds_to_wait)
 
 # スクリーンショット撮影のコールバック関数
 screenshot_counter = 0  # 撮影した枚数をカウントする

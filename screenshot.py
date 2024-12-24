@@ -1,10 +1,9 @@
 import os
+import signal
 import time
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from PIL import Image
-import pillow_avif
 
 # スクリーンショット保存先フォルダ
 output_dir = "screenshots"
@@ -25,32 +24,47 @@ driver = webdriver.Chrome(options=options)
 # GoogleサンタページのURL
 url = "https://santatracker.google.com/"
 
-# 360回のループ (30秒ごと、約3時間)
-for i in range(5):
-    # 現在時刻を取得し次の30秒まで待機
+# スクリーンショット撮影カウンター
+screenshot_count = 0
+max_screenshots = 360  # 最大360枚撮影
+
+
+def capture_screenshot(signum, frame):
+    global screenshot_count
+
+    # 撮影が完了した場合、ドライバーを終了して終了
+    if screenshot_count >= max_screenshots:
+        print("Screenshot capture complete.")
+        driver.quit()
+        exit(0)
+
+    # スクリーンショットを保存
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = os.path.join(output_dir, f"santa_{screenshot_count:04d}.png")
+    driver.save_screenshot(filename)
+    print(f"Screenshot saved: {filename}")
+
+    # カウンターを増加
+    screenshot_count += 1
+
+
+if __name__ == "__main__":
+    # 最初にURLを1回開く
+    driver.get(url)
+    print("Waiting for completely loading the page...")
+    WebDriverWait(driver, 30).until(expected_conditions.presence_of_all_elements_located)
+    print("Page loaded successfully.")
+    
+    # 00分まで待機
     now = datetime.now()
-    seconds_to_wait = 30 - (now.second % 30)
+    seconds_to_wait = (60 - now.minute) * 60 - now.second
+    print(f"Waiting {seconds_to_wait} seconds until 00:00...")
     time.sleep(seconds_to_wait)
 
-    # ページを開く
-    driver.get(url)
-    time.sleep(3)
+    # タイマー設定: 初回遅延なし、10秒間隔で実行
+    signal.signal(signal.SIGALRM, capture_screenshot)
+    signal.setitimer(signal.ITIMER_REAL, 0, 10)  # 10秒間隔で実行
 
-    # スクリーンショットをPNG形式で保存
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    png_path = os.path.join(output_dir, f"santa_{timestamp}.png")
-    driver.save_screenshot(png_path)
-    print(f"PNG Screenshot saved: {png_path}")
-
-    # PNGをAVIFに変換して保存
-    avif_path = os.path.join(output_dir, f"santa_{timestamp}.avif")
-    with Image.open(png_path) as img:
-        img.save(avif_path, format="AVIF")
-    print(f"AVIF Screenshot saved: {avif_path}")
-
-    # 変換後にPNGを削除
-    os.remove(png_path)
-    print(f"Deleted PNG file: {png_path}")
-
-# ドライバーを終了
-driver.quit()
+    # メインスレッドを待機させる
+    while True:
+        time.sleep(60)

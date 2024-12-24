@@ -32,7 +32,7 @@ options.add_argument("--headless")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--lang=ja-JP")
-options.add_argument("--window-size=3840,2160")
+options.add_argument("--window-size=1920,1278
 options.add_argument("TZ=Asia/Tokyo")
 options.add_experimental_option("prefs", {
         "intl.accept_languages": "ja",  # 言語を日本語に設定

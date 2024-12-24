@@ -25,7 +25,7 @@ driver = webdriver.Chrome(options=options)
 url = "https://santatracker.google.com/"
 
 # 360回のループ (30秒ごと、約3時間)
-for i in range(360):
+for i in range(5):
     # 現在時刻を取得し次の30秒まで待機
     now = datetime.now()
     seconds_to_wait = 30 - (now.second % 30)

@@ -3,8 +3,6 @@ import time
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
 
 def time_span(interval, iterations, callback):
     """
@@ -36,6 +34,10 @@ options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--lang=ja-JP")
 options.add_argument("--window-size=3840,2160")
 options.add_argument("TZ=Asia/Tokyo")
+options.add_experimental_option("prefs", {
+        "intl.accept_languages": "ja",  # 言語を日本語に設定
+    })
+options.add_argument("--lang=ja")
 
 # ドライバーの起動
 driver = webdriver.Chrome(options=options)
@@ -44,7 +46,7 @@ driver = webdriver.Chrome(options=options)
 url = "https://santatracker.google.com/"
 driver.get(url)  # ページを一度だけロード
 print("Waiting for completely loading the page...")
-WebDriverWait(driver, 30).until(expected_conditions.presence_of_all_elements_located)
+time.sleep(20)
 print("Page loaded successfully.")
 
 # 00分まで待機

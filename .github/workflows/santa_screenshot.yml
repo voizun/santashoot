@@ -2,7 +2,7 @@ name: Screenshot to Video
 
 on:
   schedule:
-    - cron: "25 * * * *"  # 毎時50分に実行
+    - cron: "50 * * * *"  # 毎時50分に実行
   workflow_dispatch:  # 手動実行も可能
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
 
       - name: 動画を生成
         run: |
-          ffmpeg -framerate 60 -i screenshots/santa_%04d.png -c:v libsvtav1 -preset 0 -crf 60 output.mp4
+          ffmpeg -framerate 60 -i screenshots/santa_%04d.png -c:v libsvtav1 -preset 6 -crf 35 output.mp4
 
       - name: リリースを作成して動画をアップロード
         env:

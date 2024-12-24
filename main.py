@@ -64,7 +64,7 @@ async def main():
     # 開始時刻を設定（次の00分から開始）
     now = datetime.now()
     start_time = now.replace(second=0, microsecond=0)
-    if now.second != 10:
+    if now.second != 15:
         start_time += timedelta(minutes=1)
     
     # 撮影時間（3時間）

@@ -34,4 +34,6 @@ jobs:
           python main.py
 
       - name: Create Release
-        run: gh release create videos 
+        run: |
+          gh release create videos 
+          gh release upload videos output_*.av1

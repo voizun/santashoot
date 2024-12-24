@@ -24,9 +24,9 @@ driver = webdriver.Chrome(options=options)
 # GoogleサンタページのURL
 url = "https://santatracker.google.com/"
 
-# 30秒間隔で撮影（次の00秒と30秒）
-for _ in range(2):
-    # 現在時刻を取得し次の00秒または30秒まで待機
+# 360回のループ (30秒ごと、約3時間)
+for i in range(360):
+    # 現在時刻を取得し次の30秒まで待機
     now = datetime.now()
     seconds_to_wait = 30 - (now.second % 30)
     time.sleep(seconds_to_wait)
@@ -46,6 +46,10 @@ for _ in range(2):
     with Image.open(png_path) as img:
         img.save(avif_path, format="AVIF")
     print(f"AVIF Screenshot saved: {avif_path}")
+
+    # 変換後にPNGを削除
+    os.remove(png_path)
+    print(f"Deleted PNG file: {png_path}")
 
 # ドライバーを終了
 driver.quit()

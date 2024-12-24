@@ -2,7 +2,7 @@ name: Screenshot to Video
 
 on:
   schedule:
-    - cron: "50 * * * *"  # 毎時50分に実行
+    - cron: "45 * * * *"  # 毎時50分に実行
   workflow_dispatch:  # 手動実行も可能
 
 jobs:
